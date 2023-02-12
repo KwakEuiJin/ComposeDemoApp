@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onPrimary
                 ) {
                     Greeting("fuck")
+
                 }
             }
         }

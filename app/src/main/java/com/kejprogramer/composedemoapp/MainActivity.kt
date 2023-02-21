@@ -28,10 +28,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val posts by viewModel.items.observeAsState(emptyList())
+            viewModel.loadItems()
 
-            LaunchedEffect(Unit) {
-                viewModel.loadItems()
-            }
             ComposeDemoAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = Color.White

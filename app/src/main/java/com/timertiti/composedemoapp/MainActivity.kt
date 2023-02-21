@@ -3,6 +3,7 @@ package com.timertiti.composedemoapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,31 +11,27 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.timertiti.composedemoapp.ui.theme.ComposeDemoAppTheme
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
-    val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("https://63f49e393f99f5855db38740.mockapi.io/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    val api = retrofit.create(Api::class.java)
+    private val viewModel: ItemViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var posts by remember { mutableStateOf(emptyList<ItemData>()) }
+            val posts by viewModel.items.observeAsState(emptyList())
+
             LaunchedEffect(Unit) {
-                val result = kotlin.runCatching { api.getComposeList()}
-                result.onSuccess { posts = it }
-                result.onFailure {  }
+                viewModel.loadItems()
             }
+
             ComposeDemoAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background

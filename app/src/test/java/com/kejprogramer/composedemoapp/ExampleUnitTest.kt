@@ -1,4 +1,4 @@
-package com.timertiti.composedemoapp
+package com.kejprogramer.composedemoapp
 
 import org.junit.Test
 

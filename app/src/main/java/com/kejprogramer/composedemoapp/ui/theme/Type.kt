@@ -1,4 +1,4 @@
-package com.timertiti.composedemoapp.ui.theme
+package com.kejprogramer.composedemoapp.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

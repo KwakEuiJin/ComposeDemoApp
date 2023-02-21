@@ -1,4 +1,4 @@
-package com.timertiti.composedemoapp
+package com.kejprogramer.composedemoapp
 
 
 import androidx.lifecycle.LiveData
@@ -23,6 +23,7 @@ class ItemViewModel : ViewModel() {
     val items: LiveData<List<ItemData>> get() = _items
 
     fun loadItems() {
+        //LaunchedEffect 를 쓰는 것을 권장?
         viewModelScope.launch {
             val result = runCatching { api.getComposeList() }
             result.onSuccess { _items.value = it }

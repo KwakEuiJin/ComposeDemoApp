@@ -1,6 +1,7 @@
 package com.kejprogramer.composedemoapp
 
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,11 @@ class ItemViewModel : ViewModel() {
 
     fun loadItems() {
         //LaunchedEffect 를 쓰는 것을 권장?
+//        LaunchedEffect(Unit) {
+//            val result = runCatching { api.getComposeList() }
+//            result.onSuccess { _items.value = it }
+//            result.onFailure { }
+//        }
         viewModelScope.launch {
             val result = runCatching { api.getComposeList() }
             result.onSuccess { _items.value = it }

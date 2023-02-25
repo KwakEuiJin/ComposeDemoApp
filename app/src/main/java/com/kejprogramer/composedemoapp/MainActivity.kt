@@ -3,15 +3,16 @@ package com.kejprogramer.composedemoapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.kejprogramer.composedemoapp.ui.theme.ComposeDemoAppTheme
 
@@ -22,61 +23,72 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComposeDemoAppTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    SwipeableScreens()
+                    BottomNavigationScreens()
                 }
             }
         }
     }
+}
 
-    @Composable
-    fun SwipeableScreens() {
-        val tabTitles = listOf("Screen 1", "Screen 2")
-        val currentTabIndex = remember { mutableStateOf(0) }
-
-        Column(modifier = Modifier.fillMaxSize()) {
-            TabRow(
-                selectedTabIndex = currentTabIndex.value,
-                backgroundColor = Color.Gray,
-                contentColor = Color.White
-            ) {
-                tabTitles.forEachIndexed { index, title ->
-                    Tab(
-                        text = { Text(text = title) },
+@Composable
+fun BottomNavigationScreens() {
+    val currentTabIndex = remember { mutableStateOf(0) }
+    Scaffold(
+        bottomBar = {
+            BottomNavigation {
+                val navItems = listOf("Home", "Profile")
+                navItems.forEachIndexed { index, label ->
+                    BottomNavigationItem(
+                        icon = {
+                            when (index) {
+                                0 -> Icon(Icons.Filled.Home, contentDescription = null)
+                                1 -> Icon(Icons.Filled.Person, contentDescription = null)
+                                else -> Icon(Icons.Filled.Home, contentDescription = null)
+                            }
+                        },
+                        label = { Text(label) },
                         selected = currentTabIndex.value == index,
-                        onClick = { currentTabIndex.value = index }
+                        onClick = {
+                            currentTabIndex.value = index
+                        }
                     )
                 }
             }
-            Box(modifier = Modifier.weight(1f)) {
-                when (currentTabIndex.value) {
-                    0 -> Screen1()
-                    1 -> Screen2()
-                }
-            }
         }
-    }
+    ) { innerPadding ->
+        val modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
 
-    @Composable
-    fun Screen1() {
-        Text(
-            text = "Screen 1",
-            modifier = Modifier.fillMaxSize()
+        val screens: List<@Composable (Modifier) -> Unit> = listOf(
+            { Screen1() },
+            { Screen2() }
         )
+        screens[currentTabIndex.value].invoke(modifier)
     }
+}
 
-    @Composable
-    fun Screen2() {
-        Text(
-            text = "Screen 2",
-            modifier = Modifier.fillMaxSize()
-        )
-    }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        ComposeDemoAppTheme {
-            SwipeableScreens()
-        }
+@Composable
+fun Screen1(modifier: Modifier = Modifier) {
+    Text(
+        text = "Screen 1",
+        modifier = modifier.fillMaxSize()
+    )
+}
+
+@Composable
+fun Screen2(modifier: Modifier = Modifier) {
+    Text(
+        text = "Screen 2",
+        modifier = modifier.fillMaxSize()
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    ComposeDemoAppTheme {
+        BottomNavigationScreens()
     }
 }
